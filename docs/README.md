@@ -3,17 +3,26 @@
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Project Architecture](#project-architecture)
-3. [Simulation Methodology](#simulation-methodology)
-4. [Technical Implementation](#technical-implementation)
-5. [Infrastructure](#infrastructure)
-6. [API Reference](#api-reference)
-7. [Data Visualization](#data-visualization)
-8. [Development Notes](#development-notes)
+2. [Demo](#demo)
+3. [Project Architecture](#project-architecture)
+4. [Simulation Methodology](#simulation-methodology)
+5. [Technical Implementation](#technical-implementation)
+6. [Infrastructure](#infrastructure)
+7. [API Reference](#api-reference)
+8. [Data Visualization](#data-visualization)
+9. [Development Notes](#development-notes)
 
 ## Introduction
 
 The Gambler's Ruin is a classic problem in probability theory that models a gambler who starts with an initial fortune and plays a sequence of bets against an opponent (typically a casino), resulting in either achieving a target fortune or going broke. This project implements various computational simulations of the Gambler's Ruin problem, offering both Monte Carlo simulations and theoretical probability calculations.
+
+## Demo
+
+### Video Demonstration
+
+Below is a video demonstration of the Gambler's Ruin web interface, showing how to run simulations and visualize results:
+
+![Web Interface Demo](webInterface.mp4)
 
 ## Project Architecture
 
