@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gambler's Ruin Simulation</title>
+    <!-- Fix static file reference -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Bootstrap for quick styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add status div for connection information -->
+    <style>
+        #status-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 5px 10px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            z-index: 1000;
+        }
+        #connection-status {
+            color: gray;
+        }
+        #connection-status.connected {
+            color: green;
+        }
+        #connection-status.disconnected {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Gambler's Ruin Simulation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#basic">Basic Simulation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#general">General Simulation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#extended">Extended Simulation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <header class="text-center mb-5">
+            <h1>Gambler's Ruin Simulation</h1>
+            <p class="lead">Explore the probabilities of winning and going broke in various gambling scenarios</p>
+        </header>
+
+        <!-- Introduction Section -->
+        <section class="mb-5">
+            <h2>Introduction</h2>
+            <p>
+                The Gambler's Ruin problem is a classic scenario in probability theory. It models the situation where
+                a gambler plays a sequence of games, winning or losing a fixed amount with certain probabilities,
+                until they either reach a goal amount or go broke.
+            </p>
+            <p>
+                This application allows you to simulate various versions of the Gambler's Ruin problem
+                and observe how different parameters affect the outcomes.
+            </p>
+        </section>
+
+        <!-- Basic Simulation Section -->
+        <section id="basic" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Basic Simulation</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        In the basic Gambler's Ruin scenario, the gambler:
+                    </p>
+                    <ul>
+                        <li>Plays a fair game with a 1/2 chance of winning</li>
+                        <li>Doubles their money when winning (bet of $1)</li>
+                        <li>Loses their bet when losing</li>
+                        <li>Continues until they either go broke or reach their goal</li>
+                    </ul>
+
+                    <form id="basic-form" class="mt-3">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="basic-i" class="form-label">Starting Amount (i)</label>
+                                <input type="number" class="form-control" id="basic-i" min="1" value="10" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="basic-n" class="form-label">Goal Amount (n)</label>
+                                <input type="number" class="form-control" id="basic-n" min="2" value="20" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="basic-trials" class="form-label">Number of Simulations</label>
+                            <input type="number" class="form-control" id="basic-trials" min="100" max="100000" value="10000" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Run Simulation</button>
+                    </form>
+
+                    <div id="basic-result" class="mt-4 d-none">
+                        <h3>Results</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <p><strong>Win Probability:</strong> <span id="basic-win-prob"></span></p>
+                                    <p><strong>Broke Probability:</strong> <span id="basic-broke-prob"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="basic-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- General Simulation Section -->
+        <section id="general" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h4 mb-0">Generalized Simulation</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        The generalized scenario allows you to adjust more parameters:
+                    </p>
+
+                    <form id="general-form" class="mt-3">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="general-i" class="form-label">Starting Amount (i)</label>
+                                <input type="number" class="form-control" id="general-i" min="1" value="10" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="general-n" class="form-label">Goal Amount (n)</label>
+                                <input type="number" class="form-control" id="general-n" min="2" value="20" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="general-trials" class="form-label">Number of Simulations</label>
+                                <input type="number" class="form-control" id="general-trials" min="100" max="100000" value="10000" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="general-p" class="form-label">Win Probability (p)</label>
+                                <input type="number" class="form-control" id="general-p" min="0.01" max="0.99" step="0.01" value="0.5" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="general-q" class="form-label">Payout Multiplier (q)</label>
+                                <input type="number" class="form-control" id="general-q" min="1.01" step="0.01" value="2.0" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="general-j" class="form-label">Bet Size (j)</label>
+                                <input type="number" class="form-control" id="general-j" min="1" value="1" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Run Simulation</button>
+                    </form>
+
+                    <div id="general-result" class="mt-4 d-none">
+                        <h3>Results</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <p><strong>Win Probability:</strong> <span id="general-win-prob"></span></p>
+                                    <p><strong>Broke Probability:</strong> <span id="general-broke-prob"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="general-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Extended Simulation Section -->
+        <section id="extended" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h2 class="h4 mb-0">Extended Simulation</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        The extended simulation adds realistic features:
+                    </p>
+                    <ul>
+                        <li>Line of credit for the gambler</li>
+                        <li>Dynamic betting strategy (increasing bets after losses)</li>
+                        <li>Maximum bet limitation</li>
+                    </ul>
+
+                    <form id="extended-form" class="mt-3">
+                        <!-- Base parameters -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="extended-i" class="form-label">Starting Amount (i)</label>
+                                <input type="number" class="form-control" id="extended-i" min="1" value="10" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="extended-n" class="form-label">Goal Amount (n)</label>
+                                <input type="number" class="form-control" id="extended-n" min="2" value="20" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="extended-trials" class="form-label">Number of Simulations</label>
+                                <input type="number" class="form-control" id="extended-trials" min="100" max="100000" value="10000" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="extended-p" class="form-label">Win Probability (p)</label>
+                                <input type="number" class="form-control" id="extended-p" min="0.01" max="0.99" step="0.01" value="0.5" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="extended-q" class="form-label">Payout Multiplier (q)</label>
+                                <input type="number" class="form-control" id="extended-q" min="1.01" step="0.01" value="2.0" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="extended-j" class="form-label">Initial Bet Size (j)</label>
+                                <input type="number" class="form-control" id="extended-j" min="1" value="1" required>
+                            </div>
+                        </div>
+
+                        <!-- Extension toggles -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="use-credit">
+                                    <label class="form-check-label" for="use-credit">Use Line of Credit</label>
+                                </div>
+                                <div id="credit-amount-container" class="mt-2 d-none">
+                                    <label for="extended-k" class="form-label">Credit Amount (k)</label>
+                                    <input type="number" class="form-control" id="extended-k" min="1" value="5">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="use-dynamic-betting">
+                                    <label class="form-check-label" for="use-dynamic-betting">Use Dynamic Betting</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="use-max-bet">
+                                    <label class="form-check-label" for="use-max-bet">Use Maximum Bet</label>
+                                </div>
+                                <div id="max-bet-container" class="mt-2 d-none">
+                                    <label for="extended-m" class="form-label">Maximum Bet (m)</label>
+                                    <input type="number" class="form-control" id="extended-m" min="1" value="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning">Run Simulation</button>
+                    </form>
+
+                    <div id="extended-result" class="mt-4 d-none">
+                        <h3>Results</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert alert-info">
+                                    <p><strong>Win Probability:</strong> <span id="extended-win-prob"></span></p>
+                                    <p><strong>Broke Probability:</strong> <span id="extended-broke-prob"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="extended-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="mb-5">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h2 class="h4 mb-0">About</h2>
+                </div>
+                <div class="card-body">
+                    <h3>The Gambler's Ruin Problem</h3>
+                    <p>
+                        The Gambler's Ruin problem is a classic problem in probability theory that models a gambler
+                        who starts with an initial fortune and plays a sequence of bets against an opponent
+                        (often represented as "the house" in gambling contexts).
+                    </p>
+                    <p>
+                        In its simplest form, the gambler wins one unit with probability p and loses one unit with
+                        probability q = 1-p in each bet. The game ends when the gambler either achieves a
+                        predetermined goal (n units) or goes broke (0 units).
+                    </p>
+                    <p>
+                        This application explores various variations of this problem, allowing you to see how
+                        different parameters affect the probability of winning or going broke.
+                    </p>
+
+                    <h3>Theory vs. Simulation</h3>
+                    <p>
+                        For the basic Gambler's Ruin problem with fair games (p = 0.5), the theoretical probability
+                        of winning is i/n, where i is the starting amount and n is the goal amount.
+                        The simulation results should approach this theoretical value as the number of trials increases.
+                    </p>
+
+                    <h3>Extensions</h3>
+                    <p>
+                        This application explores several extensions to make the model more realistic:
+                    </p>
+                    <ul>
+                        <li><strong>Line of Credit:</strong> The gambler can take out a loan if they hit 0, allowing them to continue playing.</li>
+                        <li><strong>Dynamic Betting:</strong> The gambler increases their bet after losses (a common but flawed strategy).</li>
+                        <li><strong>Maximum Bet:</strong> The house implements a maximum bet limit, affecting the gambler's betting strategy.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>Gambler's Ruin Simulation Project</p>
+        </div>
+    </footer>
+
+    <!-- Connection status bar -->
+    <div id="status-bar">
+        <span id="connection-status">Checking API connection...</span>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/static/js/api-client.js"></script>
+    <script src="/static/js/visualizations.js"></script>
+    <script src="/static/js/main.js"></script>
+    
+    <!-- Connection check script -->
+    <script>
+        // Check API connection on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusElement = document.getElementById('connection-status');
+            
+            // Try to fetch API docs to check connection
+            fetch('http://localhost:5000/api/docs')
+                .then(response => {
+                    if (response.ok) {
+                        statusElement.textContent = 'Connected to API server';
+                        statusElement.classList.add('connected');
+                        console.log('API connection successful');
+                    } else {
+                        throw new Error(`API server responded with status ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    statusElement.textContent = 'API server not available: ' + error.message;
+                    statusElement.classList.add('disconnected');
+                    console.error('API connection failed:', error);
+                    alert('Cannot connect to API server. Make sure it is running on http://localhost:5000');
+                });
+        });
+    </script>
+</body>
+</html> 

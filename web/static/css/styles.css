@@ -1,0 +1,82 @@
+/**
+ * Custom styles for Gambler's Ruin Simulation Web Interface
+ */
+
+/* Global Styles */
+body {
+    padding-top: 20px;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+}
+
+/* Section Styles */
+section {
+    padding: 20px 0;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Controls */
+.form-control {
+    margin-bottom: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+/* Results Styling */
+.alert-info {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+    color: #0d47a1;
+}
+
+/* Chart Container */
+canvas {
+    max-width: 100%;
+    height: auto !important;
+    margin-bottom: 1rem;
+}
+
+/* Navbar Customization */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Footer Styling */
+footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+/* Utility Classes */
+.text-muted {
+    color: #6c757d;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+} 
